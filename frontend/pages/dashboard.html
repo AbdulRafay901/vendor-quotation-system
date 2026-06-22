@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VQMS - Vendor & Quotation Management System</title>
+    <!-- Bootstrap Grid CSS - Only used for grid layout structures as requested -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-grid.min.css" rel="stylesheet">
+    
+    <style>
+        /* --- BRAND NEW PREMIUM CUSTOM CSS (Same to Same Look & Feel) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --font-family: 'Plus Jakarta Sans', sans-serif;
+            --bg-body: #f8faff;
+            --sidebar-bg: #0b112c;
+            --sidebar-active-bg: #1e295d;
+            --sidebar-active-text: #ffffff;
+            --text-dark: #1e2229;
+            --text-muted: #8a94a6;
+            --white: #ffffff;
+            --border-color: #e2e8f0;
+            
+            /* Theme Color Palette from Image */
+            --blue-primary: #3b66f5;
+            --blue-light: #eef2ff;
+            
+            --green-primary: #10b981;
+            --green-light: #ecfdf5;
+            
+            --orange-primary: #f97316;
+            --orange-light: #fff7ed;
+            
+            --purple-primary: #8b5cf6;
+            --purple-light: #f5f3ff;
+
+            --red-primary: #ef4444;
+            --red-light: #fef2f2;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* --- SIDEBAR STYLE (MATCHING IMAGE EXACTLY + RESPONSIVE TOGGLE) --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: #b0b7c3;
+            flex-shrink: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 1050;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--white);
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-brand-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-brand svg {
+            width: 34px;
+            height: 34px;
+            background: var(--blue-primary);
+            padding: 6px;
+            border-radius: 8px;
+            fill: var(--white);
+        }
+
+        .sidebar-close-btn {
+            background: transparent;
+            border: none;
+            color: #b0b7c3;
+            font-size: 24px;
+            cursor: pointer;
+            display: none;
+            line-height: 1;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .sidebar-close-btn:hover {
+            color: var(--white);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 10px 14px;
+            flex-grow: 1;
+        }
+
+        .sidebar-item {
+            margin-bottom: 6px;
+        }
+
+        .sidebar-item a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #b0b7c3;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .sidebar-item a svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+            opacity: 0.8;
+        }
+
+        .sidebar-item.active a, .sidebar-item a:hover {
+            background-color: var(--blue-primary);
+            color: var(--white);
+        }
+
+        /* --- MAIN SECTION STYLING --- */
+        .main-wrapper {
+            flex-grow: 1;
+            padding: 24px 30px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        /* --- TOPBAR STYLING (MATCHING NAVBAR + HAMBURGER TOGGLE) --- */
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: transparent;
+        }
+
+        .top-navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Sidebar Toggle Button for Laptop/Tablet/Mobile */
+        .sidebar-toggle-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--white);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+
+        .sidebar-toggle-btn:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .sidebar-toggle-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-dark);
+        }
+
+        .navbar-search {
+            position: relative;
+            width: 350px;
+        }
+
+        .navbar-search input {
+            width: 100%;
+            height: 44px;
+            padding: 10px 16px 10px 46px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            background-color: var(--white);
+            font-family: var(--font-family);
+            font-size: 14px;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .navbar-search input:focus {
+            border-color: var(--blue-primary);
+            box-shadow: 0 0 0 3px rgba(59, 102, 245, 0.1);
+        }
+
+        .navbar-search svg {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: var(--text-muted);
+        }
+
+        .navbar-user-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .notification-trigger {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-trigger::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 11px;
+            width: 8px;
+            height: 8px;
+            background-color: var(--orange-primary);
+            border: 2px solid var(--white);
+            border-radius: 50%;
+        }
+
+        .user-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-text-details {
+            text-align: right;
+        }
+
+        .user-display-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+
+        .user-role-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .user-avatar-img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--white);
+            font-size: 14px;
+            border: 2px solid var(--white);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* --- DASHBOARD HEADER --- */
+        .dash-header-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+        }
+
+        /* --- STATS CARD PIXEL PERFECT DESIGN --- */
+        .custom-stat-card {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            border: 1px solid #eef2f6;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .custom-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-label-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .stat-main-number {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .stat-view-link {
+            display: inline-block;
+            margin-top: 14px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .stat-view-link:hover {
+            opacity: 0.8;
+        }
+
+        .stat-icon-wrapper {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon-wrapper svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* --- STAT CARD SYSTEM COLORS IN IMAGE --- */
+        .color-blue-card {
+            border-left: 4px solid var(--blue-primary);
+        }
+        .color-blue-card .stat-main-number { color: var(--blue-primary); }
+        .color-blue-card .stat-icon-wrapper { background-color: var(--blue-light); fill: var(--blue-primary); }
+        .color-blue-card .stat-view-link { color: var(--blue-primary); }
+
+        .color-green-card {
+            border-left: 4px solid var(--green-primary);
+        }
+        .color-green-card .stat-main-number { color: var(--green-primary); }
+        .color-green-card .stat-icon-wrapper { background-color: var(--green-light); fill: var(--green-primary); }
+        .color-green-card .stat-view-link { color: var(--green-primary); }
+
+        .color-orange-card {
+            border-left: 4px solid var(--orange-primary);
+        }
+        .color-orange-card .stat-main-number { color: var(--orange-primary); }
+        .color-orange-card .stat-icon-wrapper { background-color: var(--orange-light); fill: var(--orange-primary); }
+        .color-orange-card .stat-view-link { color: var(--orange-primary); }
+
+        .color-purple-card {
+            border-left: 4px solid var(--purple-primary);
+        }
+        .color-purple-card .stat-main-number { color: var(--purple-primary); }
+        .color-purple-card .stat-icon-wrapper { background-color: var(--purple-light); fill: var(--purple-primary); }
+        .color-purple-card .stat-view-link { color: var(--purple-primary); }
+
+        /* --- GRAPH & ACTIVITY BLOCKS --- */
+        .panel-card {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #eef2f6;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            margin-bottom: 24px;
+            height: calc(100% - 24px);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .panel-action-link {
+            font-size: 13px;
+            color: var(--blue-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* --- EXTREMELY ACCURATE SVG DONUT CHART --- */
+        .visual-chart-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 10px 0;
+            gap: 20px;
+        }
+
+        .circular-svg-donut {
+            position: relative;
+            width: 170px;
+            height: 170px;
+        }
+
+        .circular-svg-donut svg {
+            transform: rotate(-90deg);
+        }
+
+        .donut-bg-track {
+            fill: none;
+            stroke: #f1f5f9;
+            stroke-width: 14;
+        }
+
+        .donut-segment {
+            fill: none;
+            stroke-width: 14;
+            stroke-linecap: round;
+        }
+
+        .donut-center-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .donut-center-total {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1;
+        }
+
+        .donut-center-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        /* --- LEGENDS SETUP FROM IMAGE --- */
+        .chart-legend-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: 160px;
+        }
+
+        .legend-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .legend-bullet-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .legend-indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .legend-percentage-value {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* --- TIMELINE ACTIVITIES LIST --- */
+        .timeline-activities {
+            list-style: none;
+            position: relative;
+            padding-left: 8px;
+        }
+
+        .timeline-node {
+            display: flex;
+            gap: 16px;
+            position: relative;
+            padding-bottom: 24px;
+        }
+
+        /* Continuous Vertical Line */
+        .timeline-node:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 24px;
+            bottom: 0;
+            width: 2px;
+            background: #e2e8f0;
+        }
+
+        .timeline-bullet-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            z-index: 2;
+        }
+
+        .timeline-bullet-icon svg {
+            width: 10px;
+            height: 10px;
+        }
+
+        /* Bullet status colors */
+        .activity-blue-status { background-color: var(--blue-light); fill: var(--blue-primary); }
+        .activity-orange-status { background-color: var(--orange-light); fill: var(--orange-primary); }
+        .activity-green-status { background-color: var(--green-light); fill: var(--green-primary); }
+        .activity-red-status { background-color: var(--red-light); fill: var(--red-primary); }
+
+        .timeline-node-content {
+            flex-grow: 1;
+        }
+
+        .timeline-main-text {
+            font-size: 14px;
+            color: var(--text-dark);
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .timeline-main-text strong {
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .timeline-time-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* --- SIDEBAR BACKDROP OVERLAY FOR MOBILE/TABLET --- */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(11, 17, 44, 0.4);
+            z-index: 1040;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* --- RESPONSIVE OPTIMIZATION (Mobile/Tablet Support + Toggle Action) --- */
+        @media (max-width: 1200px) {
+            .visual-chart-wrap {
+                flex-direction: column;
+                align-items: center;
+                gap: 25px;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                top: 0;
+                bottom: 0;
+                height: 100vh;
+                box-shadow: 8px 0 25px rgba(0, 0, 0, 0.15);
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .sidebar-close-btn {
+                display: block; /* Close button visible only on smaller screens */
+            }
+        }
+
+        /* Laptop screens structure when sidebar toggling is active */
+        @media (min-width: 992px) {
+            .sidebar.collapsed {
+                margin-left: -260px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .top-navbar {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            .top-navbar-left {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .navbar-search {
+                width: 100%;
+                flex-grow: 1;
+            }
+            .navbar-user-area {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .main-wrapper {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layout-container">
+        
+        <!-- SIDEBAR CONTAINER (Exact Left Navigation Panel) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-left">
+                    <!-- Customized VQMS Brand SVG Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                    <span>VQMS</span>
+                </div>
+                <!-- Close Button for Mobile Screens -->
+                <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close Sidebar">&times;</button>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li class="sidebar-item active">
+                    <a href="#">
+                        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#">
+                        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 1.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                        Vendors
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                        Quotations
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#">
+                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                        Comparisons
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#">
+                        <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+                        Activities
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#">
+                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14H7v-7h3v7zm4 0h-3V7h3v10zm4 0h-3v-4h3v4z"/></svg>
+                        Reports
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#">
+                        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                        Settings
+                    </a>
+                </li>
+                <li class="sidebar-item" style="margin-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 15px;">
+                    <a href="#">
+                        <svg viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- BACKDROP OVERLAY FOR SIDEBAR MOBILE TOGGLING -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- MAIN WINDOW CONTENT WRAPPER -->
+        <main class="main-wrapper">
+            
+            <!-- TOP NAVBAR COMPONENT -->
+            <div class="top-navbar">
+                <div class="top-navbar-left">
+                    <!-- Toggle Sidebar Button (Hamburger Icon) -->
+                    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle Sidebar">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                        </svg>
+                    </button>
+                    
+                    <div class="navbar-search">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                        </svg>
+                        <input type="text" placeholder="Search here...">
+                    </div>
+                </div>
+                
+                <div class="navbar-user-area">
+                    <div class="notification-trigger">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#64748b">
+                            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="user-meta">
+                        <div class="user-text-details">
+                            <div class="user-display-name">Admin User</div>
+                            <div class="user-role-label">Administrator</div>
+                        </div>
+                        <div class="user-avatar-img">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DASHBOARD SECTION HEADER -->
+            <h2 class="dash-header-title">Dashboard</h2>
+
+            <!-- 4 ANALYTICAL STAT CARDS (Bootstrap grid row) -->
+            <div class="row">
+                <!-- Total Vendors Card -->
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="custom-stat-card color-blue-card">
+                        <div class="stat-card-flex">
+                            <div>
+                                <div class="stat-label-text">Total Vendors</div>
+                                <div class="stat-main-number">25</div>
+                            </div>
+                            <div class="stat-icon-wrapper">
+                                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 1.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                            </div>
+                        </div>
+                        <a href="#" class="stat-view-link">View all vendors →</a>
+                    </div>
+                </div>
+
+                <!-- Active Quotations Card -->
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="custom-stat-card color-green-card">
+                        <div class="stat-card-flex">
+                            <div>
+                                <div class="stat-label-text">Active Quotations</div>
+                                <div class="stat-main-number">18</div>
+                            </div>
+                            <div class="stat-icon-wrapper">
+                                <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                            </div>
+                        </div>
+                        <a href="#" class="stat-view-link">View active →</a>
+                    </div>
+                </div>
+
+                <!-- Pending Quotations Card -->
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="custom-stat-card color-orange-card">
+                        <div class="stat-card-flex">
+                            <div>
+                                <div class="stat-label-text">Pending Quotations</div>
+                                <div class="stat-main-number">07</div>
+                            </div>
+                            <div class="stat-icon-wrapper">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                            </div>
+                        </div>
+                        <a href="#" class="stat-view-link">View pending →</a>
+                    </div>
+                </div>
+
+                <!-- Approved Quotations Card -->
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="custom-stat-card color-purple-card">
+                        <div class="stat-card-flex">
+                            <div>
+                                <div class="stat-label-text">Approved Quotations</div>
+                                <div class="stat-main-number">11</div>
+                            </div>
+                            <div class="stat-icon-wrapper">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                            </div>
+                        </div>
+                        <a href="#" class="stat-view-link">View approved →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANALYTICS BLOCK ROW -->
+            <div class="row">
+                <!-- CHART COMPONENT BLOCK -->
+                <div class="col-12 col-lg-7">
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <span class="panel-title">Quotation Status Overview</span>
+                        </div>
+                        
+                        <div class="visual-chart-wrap">
+                            <!-- High Accuracy SVG Donut Chart (Exact pixel layout style matching Image) -->
+                            <div class="circular-svg-donut">
+                                <svg width="100%" height="100%" viewBox="0 0 100 100">
+                                    <circle class="donut-bg-track" cx="50" cy="50" r="40" />
+                                    <!-- Segment 1: Active 50% (Green-Blue Primary) - starts at 0, length 125.6 (50% of 251.2) -->
+                                    <circle class="donut-segment" cx="50" cy="50" r="40" 
+                                            stroke="var(--blue-primary)" 
+                                            stroke-dasharray="125.6 251.2" 
+                                            stroke-dashoffset="0" />
+                                    
+                                    <!-- Segment 2: Approved 30% (Purple) - starts after 50%, length 75.36 -->
+                                    <circle class="donut-segment" cx="50" cy="50" r="40" 
+                                            stroke="var(--purple-primary)" 
+                                            stroke-dasharray="75.36 251.2" 
+                                            stroke-dashoffset="-125.6" />
+
+                                    <!-- Segment 3: Pending 20% (Orange) - starts after 80%, length 50.24 -->
+                                    <circle class="donut-segment" cx="50" cy="50" r="40" 
+                                            stroke="var(--orange-primary)" 
+                                            stroke-dasharray="50.24 251.2" 
+                                            stroke-dashoffset="-200.96" />
+                                </svg>
+                                <div class="donut-center-overlay">
+                                    <div class="donut-center-total">36</div>
+                                    <div class="donut-center-sub">Total</div>
+                                </div>
+                            </div>
+
+                            <!-- Precise Status Legends Side-by-Side as Mockup -->
+                            <div class="chart-legend-panel">
+                                <div class="legend-row">
+                                    <span class="legend-bullet-text">
+                                        <span class="legend-indicator-dot" style="background-color: var(--blue-primary)"></span>
+                                        Pending
+                                    </span>
+                                    <span class="legend-percentage-value">7 (20%)</span>
+                                </div>
+                                <div class="legend-row">
+                                    <span class="legend-bullet-text">
+                                        <span class="legend-indicator-dot" style="background-color: var(--green-primary)"></span>
+                                        Active
+                                    </span>
+                                    <span class="legend-percentage-value">18 (50%)</span>
+                                </div>
+                                <div class="legend-row">
+                                    <span class="legend-bullet-text">
+                                        <span class="legend-indicator-dot" style="background-color: var(--purple-primary)"></span>
+                                        Approved
+                                    </span>
+                                    <span class="legend-percentage-value">11 (30%)</span>
+                                </div>
+                                <div class="legend-row">
+                                    <span class="legend-bullet-text">
+                                        <span class="legend-indicator-dot" style="background-color: var(--red-primary)"></span>
+                                        Rejected
+                                    </span>
+                                    <span class="legend-percentage-value">0 (0%)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RECENT TIMELINE ACTIVITIES COMPONENT -->
+                <div class="col-12 col-lg-5">
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <span class="panel-title">Recent Activities</span>
+                            <a href="#" class="panel-action-link">View all</a>
+                        </div>
+                        
+                        <ul class="timeline-activities">
+                            <!-- Event 1 -->
+                            <li class="timeline-node">
+                                <div class="timeline-bullet-icon activity-blue-status">
+                                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+                                </div>
+                                <div class="timeline-node-content">
+                                    <p class="timeline-main-text">New vendor <strong>"Tech Solutions"</strong> added</p>
+                                    <p class="timeline-time-text">2 mins ago</p>
+                                </div>
+                            </li>
+                            <!-- Event 2 -->
+                            <li class="timeline-node">
+                                <div class="timeline-bullet-icon activity-orange-status">
+                                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+                                </div>
+                                <div class="timeline-node-content">
+                                    <p class="timeline-main-text">Quotation <strong>"QTN-2024-0018"</strong> submitted by ABC Traders</p>
+                                    <p class="timeline-time-text">15 mins ago</p>
+                                </div>
+                            </li>
+                            <!-- Event 3 -->
+                            <li class="timeline-node">
+                                <div class="timeline-bullet-icon activity-green-status">
+                                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+                                </div>
+                                <div class="timeline-node-content">
+                                    <p class="timeline-main-text">Quotation <strong>"QTN-2024-0016"</strong> approved</p>
+                                    <p class="timeline-time-text">1 hour ago</p>
+                                </div>
+                            </li>
+                            <!-- Event 4 -->
+                            <li class="timeline-node">
+                                <div class="timeline-bullet-icon activity-purple-status">
+                                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+                                </div>
+                                <div class="timeline-node-content">
+                                    <p class="timeline-main-text">New quotation request <strong>"Office Furniture"</strong> created</p>
+                                    <p class="timeline-time-text">2 hours ago</p>
+                                </div>
+                            </li>
+                            <!-- Event 5 -->
+                            <li class="timeline-node">
+                                <div class="timeline-bullet-icon activity-red-status">
+                                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+                                </div>
+                                <div class="timeline-node-content">
+                                    <p class="timeline-main-text">Vendor <strong>"Global Systems"</strong> updated their quote</p>
+                                    <p class="timeline-time-text">3 hours ago</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+</body>
+</html>
