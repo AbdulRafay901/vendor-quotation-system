@@ -1,0 +1,158 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f7fc;
+}
+
+.login-wrapper {
+    padding: 30px;
+}
+
+/* Left Side */
+
+.left-side {
+    background: white;
+    height: 100%;
+    border-radius: 25px 0 0 25px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 60px;
+}
+
+.logo-box {
+    text-align: center;
+}
+
+.logo-box h1 {
+    color: #2b5cff;
+    margin-bottom: 15px;
+}
+
+.logo-box p {
+    color: #666;
+    font-size: 17px;
+}
+
+.illustration img {
+    width: 100%;
+    max-width: 420px;
+    margin-top: 50px;
+}
+
+/* Right Side */
+
+.right-side {
+    background: white;
+    height: 100%;
+    border-radius: 0 25px 25px 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 45px;
+}
+
+.login-card h2 {
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.login-card p {
+    color: #777;
+    margin-bottom: 35px;
+}
+
+.input-group {
+    margin-bottom: 25px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #333;
+}
+
+.input-group input {
+    width: 100%;
+    height: 55px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 0 20px;
+    outline: none;
+    font-size: 15px;
+}
+
+.input-group input:focus {
+    border-color: #2b5cff;
+}
+
+.remember-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.remember-box a {
+    text-decoration: none;
+    color: #2b5cff;
+}
+
+button {
+    width: 100%;
+    height: 55px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #2b5cff;
+    color: white;
+
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #1847e6;
+}
+
+.error {
+    color: red;
+    font-size: 14px;
+    display: block;
+    margin-top: 5px;
+}
+
+@media (max-width: 992px) {
+    .left-side {
+        display: none;
+    }
+
+    .right-side {
+        border-radius: 25px;
+    }
+
+    .login-card {
+        padding: 30px;
+    }
+}
