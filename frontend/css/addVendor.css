@@ -1,0 +1,135 @@
+.page-content {
+    padding: 24px;
+    background: #f8fafc;
+    min-height: calc(100vh - 70px);
+}
+
+.page-top {
+    margin-bottom: 22px;
+}
+
+.page-top h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.breadcrumb {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+.breadcrumb span {
+    margin: 0 6px;
+}
+
+.vendor-form-card {
+    max-width: 600px;
+    background: #fff;
+    border: 1px solid #edf2f7;
+    border-radius: 14px;
+    padding: 24px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+.form-group label span {
+    color: #ef4444;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 0 16px;
+    font-size: 14px;
+    outline: none;
+}
+
+.form-group input,
+.form-group select {
+    height: 44px;
+}
+
+.form-group textarea {
+    padding-top: 14px;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #2563eb;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.btn-secondary,
+.btn-primary {
+    border: none;
+    height: 42px;
+    padding: 0 22px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.btn-secondary:hover {
+    background: #e2e8f0;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+
+.error {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    color: #ef4444;
+    min-height: 18px;
+}
+
+.input-error {
+    border-color: #ef4444 !important;
+}
