@@ -149,8 +149,6 @@ button:hover {
 
 /* Dasboard ------------------ Start */
 
-        /* --- BRAND NEW PREMIUM CUSTOM CSS (Same to Same Look & Feel) --- */
-
         :root {
             --font-family: 'Plus Jakarta Sans', sans-serif;
             --bg-body: #f8faff;
@@ -179,12 +177,7 @@ button:hover {
             --red-light: #fef2f2;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+    
         body {
             font-family: var(--font-family);
             background-color: var(--bg-body);
@@ -759,8 +752,13 @@ button:hover {
         }
 
         /* --- RESPONSIVE OPTIMIZATION (Mobile/Tablet Support + Toggle Action) --- */
+     
+
         
 
+        
+
+        
 
 /* Dashboard ------------------- End  */
 @media (max-width: 1200px) {
@@ -770,6 +768,12 @@ button:hover {
                 gap: 25px;
             }
         }
+
+@media (min-width: 992px) {
+    .sidebar.collapsed {
+        margin-left: -260px;
+    }
+}
 
 @media (max-width: 991px) {
             .sidebar {
@@ -862,6 +866,9 @@ button:hover {
             .navbar-user-area {
                 width: 100%;
                 justify-content: space-between;
+            }
+            .main-wrapper {
+                padding: 16px;
             }
             .main-wrapper {
                 padding: 16px;
