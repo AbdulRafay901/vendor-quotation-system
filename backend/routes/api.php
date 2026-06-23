@@ -3,10 +3,13 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\VendorController;
 
 Route::prefix('auth')->group(function () {
 
     Route::post('/login',[AuthController::class, 'login']);
+
+    Route::post('/vendors',[VendorController::class, 'store']);
 
     Route::middleware('auth:sanctum')
         ->group(function () {
@@ -15,6 +18,8 @@ Route::prefix('auth')->group(function () {
                 '/logout',
                 [AuthController::class, 'logout']
             );
+
+            
         });
 });
 
