@@ -751,16 +751,16 @@ button:hover {
             visibility: visible;
         }
 
-        /* --- RESPONSIVE OPTIMIZATION (Mobile/Tablet Support + Toggle Action) --- */
-     
-
-        
-
-        
-
-        
-
+        .box {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
 /* Dashboard ------------------- End  */
+
+
+
 @media (max-width: 1200px) {
             .visual-chart-wrap {
                 flex-direction: column;
@@ -794,7 +794,7 @@ button:hover {
             }
 }
 
-@media (max-width: 992px) {
+/* @media (max-width: 992px) {
 
     .sidebar.collapsed {
                 margin-left: -260px;
@@ -847,7 +847,7 @@ button:hover {
     .search-box {
         width: 200px;
     }
-}
+} */
 
 @media (max-width: 576px) {
             .top-navbar {
