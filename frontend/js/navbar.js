@@ -5,13 +5,21 @@
             const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
             const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
             const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const btn = document.querySelector(".sidebar-toggle-btn");
+            const mainContent = document.querySelector(".main-content");
+            const navbarJs = document.querySelector(".header");
 
+            btn.addEventListener("click", (() => {
+                 mainContent.classList.toggle("main-content-js")
+                 navbarJs.classList.toggle("navbar-js")
+            }))
             
             function toggleSidebar() {
                 const isMobile = window.innerWidth <= 991;
                 if (isMobile) {
                     sidebar.classList.toggle('active');
                     sidebarOverlay.classList.toggle('active');
+
                 } else {
                    
                     sidebar.classList.toggle('collapsed');
