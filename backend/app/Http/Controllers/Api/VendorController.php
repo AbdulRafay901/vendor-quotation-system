@@ -14,9 +14,7 @@ class VendorController extends Controller
     ) {
     }
 
-    public function store(
-        StoreVendorRequest $request
-    ): JsonResponse {
+    public function store(StoreVendorRequest $request): JsonResponse {
 
         $vendor = $this->vendorService->store(
             $request->validated()
@@ -24,7 +22,7 @@ class VendorController extends Controller
 
         return response()->json([
             'message' => 'Vendor created successfully.',
-            'vendor' => $vendor,
+            
         ], 201);
     }
 }

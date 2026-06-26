@@ -1,34 +1,57 @@
-
 const form = document.getElementById("vendorForm");
+const vendorName = document.querySelector("#vendorName");
+const companyName = document.querySelector("#companyName");
+const email = document.querySelector("#email");
+const phone = document.querySelector("#phone");
+const address = document.querySelector("#address");
+const status = document.querySelector("#status");
 
 form.addEventListener("submit", saveVendor);
 
-function saveVendor(e) {
+async function saveVendor(e) {
     e.preventDefault();
 
-    clearErrors();
-
     const payload = {
-        vendorName: vendorName.value.trim(),
-        companyName: companyName.value.trim(),
+        vendor_name: vendorName.value.trim(),
+        company_name: companyName.value.trim(),
         email: email.value.trim(),
         phone: phone.value.trim(),
         address: address.value.trim(),
-        status: status.value,
+        status: status.value === "true" || status.value === "1" || status.checked, 
     };
 
-    let hasError = false;
+    try {
+        
+        const { data } = await axios.post(
+            "http://localhost:8000/api/auth/vendors", 
+            payload,
+            {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
 
-    Object.entries(payload).forEach(([key, value]) => {
-        if (!value) {
-            showError(key, "This field is required.");
-            hasError = true;
+        console.log("Success Response:", data);
+
+        const form = document.getElementById("vendorForm").value = "";
+        const vendorName = document.querySelector("#vendorName").value = "";
+        const companyName = document.querySelector("#companyName").value = "";
+        const email = document.querySelector("#email").value = "";
+        const phone = document.querySelector("#phone").value = "";
+        const address = document.querySelector("#address").value = "";
+        const status = document.querySelector("#status").value = "";
+
+
+    } catch (error) {
+        
+        console.error("Error Response:", error.response ? error.response.data : error.message);
+        if (error.response && error.response.data.errors) {
+            console.log("Validation Error: " + JSON.stringify(error.response.data.errors));
+        } else {
+            console.log("Something went wrong!");
         }
-    });
-
-    if (hasError) return;
-
-    console.log(payload);
-
-    // axios.post(...)
+    }
 }
