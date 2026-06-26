@@ -4,3 +4,13 @@ document
         window.location.href =
             "addVendor.html";
     });
+
+
+
+    try {
+
+        const {data} = axios.get("")
+        
+    } catch (error) {
+        
+    }

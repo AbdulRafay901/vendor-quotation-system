@@ -10,4 +10,8 @@ class VendorService
     {
         return Vendor::create($data);
     }
+    public function index(){
+        return Vendor::all();
+    }
+
 }

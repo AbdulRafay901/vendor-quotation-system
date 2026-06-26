@@ -25,4 +25,12 @@ class VendorController extends Controller
             
         ], 201);
     }
+
+    public function index(){
+        $data = $this->vendorService->index();
+
+        return response()->json([
+            "data" => $data
+        ], 200);
+    }
 }

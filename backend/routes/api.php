@@ -9,13 +9,14 @@ Route::prefix('auth')->group(function () {
 
     Route::post('/login',[AuthController::class, 'login']);
 
-    
+    Route::get('/vendors', [VendorController::class, 'index']);
     
 
     Route::middleware('auth:sanctum')
         ->group(function () {
 
         Route::post('/vendors',[VendorController::class, 'store']);
+        
 
             Route::post(
                 '/logout',
