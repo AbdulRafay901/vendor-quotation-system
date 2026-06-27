@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\VendorController;
+use App\Http\Controllers\QuotationController;
 
 Route::prefix('auth')->group(function () {
 
@@ -18,10 +19,14 @@ Route::prefix('auth')->group(function () {
         Route::post('/vendors',[VendorController::class, 'store']);
         Route::get('/vendors', [VendorController::class, 'index']);
 
-            Route::post(
-                '/logout',
-                [AuthController::class, 'logout']
-            );
+         // Quotations
+        Route::get('/quotations',       [QuotationController::class, 'index']);
+        Route::post('/quotations',      [QuotationController::class, 'store']);
+        Route::get('/quotations/{id}',  [QuotationController::class, 'show']);
+        Route::delete('/quotations/{id}',[QuotationController::class, 'destroy']);
+
+        Route::post('/logout', [AuthController::class, 'logout']);
+
 
             
         });
