@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory; 
+use App\Models\Quotation;
+
 
 class Vendor extends Model
 {
@@ -17,4 +19,10 @@ class Vendor extends Model
         'address',
         'status',
     ];
+
+    public function quotations(): BelongsToMany
+    {
+        return $this->belongsToMany(Quotation::class, 'quotation_vendor')
+->withTimestamps();
+    }
 }
