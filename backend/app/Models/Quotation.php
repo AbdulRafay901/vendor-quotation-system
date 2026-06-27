@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\User;
-use App\Http\Controllers\Api\VendorController;
+use App\Models\Vendor;
 
 class Quotation extends Model
 {
@@ -25,6 +27,6 @@ class Quotation extends Model
    
     public function vendors(): BelongsToMany
     {
-        return $this->belongsToMany(VendorController::class, 'quotation_vendor')->withTimestamps();
+        return $this->belongsToMany(Vendor::class, 'quotation_vendor')->withTimestamps();
     }
 }
