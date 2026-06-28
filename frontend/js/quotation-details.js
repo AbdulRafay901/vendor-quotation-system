@@ -345,3 +345,18 @@ function viewVendorDetails(vendorName) {
    INIT — Entry point
    ================================================================ */
 
+function init() {
+
+    // Read quotation id from URL: quotation-details.html?id=1
+    const params      = new URLSearchParams(window.location.search);
+    const quotationId = parseInt(params.get("id"), 10);
+
+    // Find quotation — fall back to first item if no id given
+    const quotation = sampleQuotations.find(q => q.id === quotationId)
+                   || sampleQuotations[0];
+
+    populateQuotationInfo(quotation);
+    populateVendorTable(quotation);
+}
+
+document.addEventListener("DOMContentLoaded", init);

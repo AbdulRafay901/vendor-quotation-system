@@ -10,14 +10,26 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('quotation_vendor', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('quotation_id')->constrained()->onDelete('cascade');
-            $table->foreignId('vendor_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('quotation_vendor', function (Blueprint $table) {
+        $table->id();
+
+        // 1. Pehle sirf columns banayen (Data type bilkul match karna chahiye)
+        $table->unsignedBigInteger('quotation_id');
+        $table->unsignedBigInteger('vendor_id');
+
+        // 2. Apne extra columns add karein
+        $table->decimal('amount', 15, 2)->nullable();
+        $table->date('submission_date')->nullable();
+        $table->string('status')->default('pending');
+
+        $table->timestamps();
+
+        // 3. Aakhir mein inko explicitly Foreign Key declare karein
+        $table->foreign('quotation_id')->references('id')->on('quotations')->onDelete('cascade');
+        $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('cascade');
+    });
+}
 
     /**
      * Reverse the migrations.
