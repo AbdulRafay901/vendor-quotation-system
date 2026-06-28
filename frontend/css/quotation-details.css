@@ -1,0 +1,485 @@
+/* ================================================================
+   quotation-details.css
+   VQMS — Quotation Details Page Styles
+   Depends on: style.css  (handles sidebar, navbar, layout base)
+   ================================================================ */
+
+
+/* ================================================================
+   1. PAGE HEADER OVERRIDE
+   Make page-top flex so status badge sits on the right
+   ================================================================ */
+
+.qd-page-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.qd-top-left h2 {
+    margin: 0 0 4px 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.qd-top-right {
+    display: flex;
+    align-items: center;
+    padding-top: 4px;
+}
+
+
+/* ================================================================
+   2. STATUS BADGE (Top-right of page)
+   ================================================================ */
+
+.qd-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 18px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+/* Active */
+.qd-status-badge.active {
+    background-color: #dcfce7;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+/* Pending */
+.qd-status-badge.pending {
+    background-color: #fef9c3;
+    color: #ca8a04;
+    border: 1px solid #fef08a;
+}
+
+/* Completed */
+.qd-status-badge.completed {
+    background-color: #ede9fe;
+    color: #7c3aed;
+    border: 1px solid #ddd6fe;
+}
+
+/* Inactive */
+.qd-status-badge.inactive {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+
+/* ================================================================
+   3. DETAIL CARDS  (.qd-card)
+   ================================================================ */
+
+.qd-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e8edf4;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05),
+                0 1px 2px rgba(15, 23, 42, 0.03);
+    overflow: hidden;
+    height: 100%;
+}
+
+.qd-card-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid #f1f5f9;
+    background: #fafbfc;
+}
+
+.qd-card-title {
+    margin: 0;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.qd-card-title i {
+    font-size: 18px;
+    color: #4361ee;
+}
+
+.qd-card-body {
+    padding: 22px 24px;
+}
+
+/* Remove padding for table sections */
+.qd-card-body.qd-no-pad {
+    padding: 0;
+}
+
+
+/* ================================================================
+   4. INFO ITEMS  (Quotation Information section)
+   ================================================================ */
+
+.info-item {
+    margin-bottom: 20px;
+}
+
+.info-item.mb-0 {
+    margin-bottom: 0;
+}
+
+/* Label: small uppercase text */
+.info-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    color: #94a3b8;
+    margin-bottom: 5px;
+}
+
+/* Value: main content text */
+.info-value {
+    display: block;
+    font-size: 14px;
+    color: #475569;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* Title value: larger and bolder */
+.info-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* Description: lighter, readable */
+.info-desc {
+    font-size: 13.5px;
+    color: #64748b;
+    font-weight: 400;
+    line-height: 1.65;
+    margin: 0;
+    display: block;
+}
+
+/* Required By: highlighted in orange-red */
+.info-required {
+    color: #ea580c !important;
+    font-weight: 600 !important;
+}
+
+/* Vendor count badge chip */
+.info-vendors-badge {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid #bfdbfe;
+    width: fit-content;
+}
+
+.info-vendors-badge i {
+    font-size: 15px;
+}
+
+
+/* ================================================================
+   5. VENDOR RESPONSES TABLE
+   ================================================================ */
+
+.qd-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.qd-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 520px;
+}
+
+/* Table head */
+.qd-table thead tr th {
+    padding: 13px 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: #94a3b8;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+    text-align: left;
+}
+
+/* Table body cells */
+.qd-table tbody tr td {
+    padding: 14px 20px;
+    font-size: 13.5px;
+    color: #475569;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+/* Remove border on last row (banner follows below) */
+.qd-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Hover effect */
+.qd-table tbody tr {
+    transition: background 0.15s ease;
+}
+
+.qd-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* Highlight the lowest-quote row */
+.qd-table tbody tr.lowest-row {
+    background: #f0fdf4;
+}
+
+.qd-table tbody tr.lowest-row:hover {
+    background: #dcfce7;
+}
+
+
+/* ================================================================
+   6. VENDOR NAME CELL  (avatar chip + name)
+   ================================================================ */
+
+.vendor-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 13.5px;
+}
+
+/* Colored initial chip */
+.vendor-chip {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.vendor-chip.chip-red    { background: linear-gradient(135deg, #f97316, #ef4444); }
+.vendor-chip.chip-blue   { background: linear-gradient(135deg, #3b82f6, #6366f1); }
+.vendor-chip.chip-green  { background: linear-gradient(135deg, #22c55e, #10b981); }
+.vendor-chip.chip-purple { background: linear-gradient(135deg, #a855f7, #8b5cf6); }
+.vendor-chip.chip-amber  { background: linear-gradient(135deg, #f59e0b, #f97316); }
+.vendor-chip.chip-teal   { background: linear-gradient(135deg, #14b8a6, #0ea5e9); }
+
+
+/* ================================================================
+   7. AMOUNT CELL
+   ================================================================ */
+
+.amount-cell {
+    font-weight: 600;
+    color: #1e293b;
+    font-variant-numeric: tabular-nums;
+    font-size: 14px;
+}
+
+.amount-cell.amount-lowest {
+    color: #16a34a;
+    font-weight: 700;
+}
+
+
+/* ================================================================
+   8. STATUS BADGES  (inside table rows)
+   ================================================================ */
+
+.badge-row-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-row-status.submitted {
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+}
+
+.badge-row-status.pending {
+    background: #fef9c3;
+    color: #ca8a04;
+    border: 1px solid #fef08a;
+}
+
+.badge-row-status.approved {
+    background: #dcfce7;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.badge-row-status.rejected {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+
+/* ================================================================
+   9. TABLE ACTION BUTTON
+   ================================================================ */
+
+.qd-action-btn {
+    width: 33px;
+    height: 33px;
+    border: none;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, transform 0.15s ease;
+    font-size: 15px;
+    line-height: 1;
+}
+
+.qd-action-btn:active {
+    transform: scale(0.93);
+}
+
+.qd-action-btn.btn-view {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.qd-action-btn.btn-view:hover {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+
+/* ================================================================
+   10. LOWEST QUOTATION BANNER
+   ================================================================ */
+
+.lowest-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    background: linear-gradient(90deg, #f0fdf4 0%, #dcfce7 100%);
+    border-top: 1px solid #bbf7d0;
+    font-size: 13.5px;
+    color: #166534;
+    font-weight: 500;
+}
+
+/* Trophy icon */
+.lowest-banner > i {
+    font-size: 20px;
+    color: #eab308;
+    filter: drop-shadow(0 1px 3px rgba(234, 179, 8, 0.4));
+    flex-shrink: 0;
+}
+
+.lowest-banner span {
+    line-height: 1.4;
+}
+
+.lowest-banner strong {
+    font-weight: 700;
+    color: #15803d;
+}
+
+
+/* ================================================================
+   11. SIDEBAR LOGOUT ITEM SEPARATOR
+   ================================================================ */
+
+.sidebar-logout {
+    margin-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 15px;
+}
+
+
+/* ================================================================
+   12. RESPONSIVE  (≤ 768px)
+   ================================================================ */
+
+@media (max-width: 768px) {
+
+    .qd-page-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .qd-card-header {
+        padding: 14px 16px;
+    }
+
+    .qd-card-body {
+        padding: 16px;
+    }
+
+    .qd-table thead tr th,
+    .qd-table tbody tr td {
+        padding: 11px 14px;
+    }
+
+    .lowest-banner {
+        flex-wrap: wrap;
+        padding: 12px 16px;
+        gap: 8px;
+    }
+
+    .vendor-chip {
+        width: 30px;
+        height: 30px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+
+    .qd-status-badge {
+        font-size: 12px;
+        padding: 5px 14px;
+    }
+
+    .info-title {
+        font-size: 14px;
+    }
+
+    .qd-card-title {
+        font-size: 13.5px;
+    }
+}
