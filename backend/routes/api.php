@@ -34,7 +34,7 @@ Route::prefix('auth')->group(function () {
 
 
     //    Activites Api 
-    Route::get('/activities', [ActivityController::class, 'index']);
+       Route::get('/activities', [ActivityController::class, 'index']);
 
         Route::post('/logout', [AuthController::class, 'logout']);
 
