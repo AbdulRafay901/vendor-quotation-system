@@ -1,0 +1,156 @@
+/* Custom Global Adjustments for Activities Page */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+}
+
+.act-page-top {
+    margin-bottom: 24px;
+}
+
+.act-top-left h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.act-top-left .breadcrumb {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 6px;
+}
+
+.act-top-left .breadcrumb span {
+    margin: 0 6px;
+    color: #cbd5e1;
+}
+
+/* Perfect Activities Card Wrapper */
+.activities-card {
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+    padding: 24px;
+}
+
+.activities-card-header {
+    margin-bottom: 24px;
+}
+
+.activities-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.activities-card-title i {
+    font-size: 18px;
+    color: #475569;
+}
+
+/* Timeline Layout Architecture */
+.timeline-wrapper {
+    position: relative;
+    padding: 8px 0;
+}
+
+/* Exact Centered Vertical Line Behind Badges */
+.timeline-wrapper::before {
+    content: '';
+    position: absolute;
+    left: 110px; /* Exact line matching center alignment */
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #f1f5f9;
+    z-index: 1;
+}
+
+.timeline-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.timeline-row:last-child {
+    margin-bottom: 0;
+}
+
+/* Time Block (Right-aligned to touch line smoothly) */
+.timeline-time {
+    width: 90px;
+    text-align: right;
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 500;
+    padding-right: 16px;
+}
+
+/* Flawless Badges with white mask border */
+.timeline-icon-box {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 12px;
+    z-index: 2;
+    background-color: #fff;
+    box-shadow: 0 0 0 4px #ffffff; /* Creates spacing overlay over vertical line */
+}
+
+/* Exact Color Palette matching the image */
+.badge-success { background-color: #10b981; }  /* Green */
+.badge-primary { background-color: #3b82f6; }  /* Blue */
+.badge-teal { background-color: #0d9488; }     /* Teal/Green */
+.badge-purple { background-color: #8b5cf6; }   /* Purple */
+.badge-orange { background-color: #f59e0b; }   /* Orange */
+
+/* Content Description Block */
+.timeline-body {
+    padding-left: 18px;
+    font-size: 14px;
+    color: #475569;
+    flex: 1;
+}
+
+.timeline-body strong {
+    color: #0f172a;
+    font-weight: 600;
+}
+
+/* View All Link Design at Bottom */
+.activities-footer-action {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.activities-footer-action a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.activities-footer-action a:hover {
+    color: #1d4ed8;
+}
+
+.activities-footer-action a i {
+    font-size: 14px;
+}

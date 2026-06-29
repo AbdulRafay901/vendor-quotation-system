@@ -290,14 +290,14 @@ async function init() {
         populateQuotationInfo(quotation);
         populateVendorTable(quotation);
     } else {
-        console.error("Quotation data load nahi ho saka.");
+        console.error("Quotation data not found");
 
         const titleEl = document.getElementById("qdTitle");
         const descEl  = document.getElementById("qdDescription");
 
         if (titleEl) titleEl.textContent = "Data Not Found";
         if (descEl)  descEl.textContent  =
-            "Backend se data fetch karte waqt error aaya. Console check karein.";
+            "backend Error.";
     }
 }
 
