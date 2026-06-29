@@ -1,5 +1,5 @@
 document
-    .querySelector(".addVendorBtn")
+    .querySelector(".quotationCreate")
     .addEventListener("click", () => {
         window.location.href =
             "addQuotation.html";

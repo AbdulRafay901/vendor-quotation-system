@@ -6,6 +6,9 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\VendorController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\Api\ActivityController;
+use App\Http\Controllers\DashboardController;
+use App\Models\Vendor;
+use App\Models\Quotation;
 
 Route::prefix('auth')->group(function () {
 
@@ -31,6 +34,19 @@ Route::prefix('auth')->group(function () {
         // Quotation Details 
 
        Route::get('/quotations/{id}/details', [QuotationController::class, 'getDetails']);
+
+
+
+      Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+      Route::get('/dashboard-stats', function () {
+    return response()->json([
+        'totalVendors' => Vendor::count(),
+        'activeQuotations' => Quotation::where('status', 1)->count(),
+        'pendingQuotations' => Quotation::where('status', 'pending')->count(),
+        'approvedQuotations' => Quotation::where('status', 'approved')->count(),
+    ]);
+});
 
 
     //    Activites Api 
