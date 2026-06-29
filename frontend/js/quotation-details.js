@@ -14,18 +14,19 @@ async function fetchQuotationData(id) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem("token")}` 
+                'Accept':        'application/json',
+                'Authorization': `Bearer ${localStorage.getItem("token")}`
             }
         });
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        console.log(data)
+        console.log("Fetched data:", data);
         return data;
+
     } catch (error) {
         console.error("Backend se data fetch karne mein masla:", error);
         return null;
@@ -41,7 +42,7 @@ async function fetchQuotationData(id) {
  * e.g. 920000 → "920,000"
  */
 function formatAmount(num) {
-    if (!num) return "0";
+    if (num === null || num === undefined || num === "") return "0";
     return Number(num).toLocaleString("en-PK");
 }
 
@@ -54,13 +55,29 @@ function capitalize(str) {
 }
 
 /**
- * Find the vendor with the lowest amount from a list.
+ * Find the vendor with the LOWEST amount from a list.
+ *
+ * ✅ FIX: Uses vendor.vendor_amount (correct backend field)
+ *         Previously was using vendor.amount which was undefined — causing
+ *         findLowestVendor to always return the first vendor incorrectly.
  */
 function findLowestVendor(vendors) {
     if (!vendors || vendors.length === 0) return null;
-    return vendors.reduce(
-        (lowest, vendor) => Number(vendor.amount) < Number(lowest.amount) ? vendor : lowest,
-        vendors[0]
+
+    // Only consider vendors that have a valid numeric amount
+    const validVendors = vendors.filter(
+        (v) => v.vendor_amount !== null &&
+               v.vendor_amount !== undefined &&
+               v.vendor_amount !== "" &&
+               !isNaN(Number(v.vendor_amount))
+    );
+
+    if (validVendors.length === 0) return null;
+
+    return validVendors.reduce(
+        (lowest, vendor) =>
+            Number(vendor.vendor_amount) < Number(lowest.vendor_amount) ? vendor : lowest,
+        validVendors[0]
     );
 }
 
@@ -79,7 +96,7 @@ function getStatusIcon(status) {
 }
 
 /**
- * Return the status badge class name.
+ * Return the status badge CSS class name.
  */
 function getStatusClass(status) {
     if (!status) return "pending";
@@ -97,34 +114,32 @@ function getStatusClass(status) {
    ================================================================ */
 
 function populateQuotationInfo(quotation) {
-    // Agar data 'data' key ke andar wrap hai toh use nikalien, nahi toh direct wrapper use karein
     const item = quotation.data ? quotation.data : quotation;
 
-    // Title aur Description
-    document.getElementById("qdTitle").textContent = item.title || "No Title Available";
-    document.getElementById("qdDescription").textContent = item.description || "No Description Provided";
+    document.getElementById("qdTitle").textContent =
+        item.title || "No Title Available";
+    document.getElementById("qdDescription").textContent =
+        item.description || "No Description Provided";
 
-    // Dates (Smart fallback agar backend se snake_case aa raha ho)
-    document.getElementById("qdCreatedOn").textContent  = item.createdOn || item.created_at || "N/A";
-    document.getElementById("qdRequiredBy").textContent = item.requiredBy || item.required_by || "N/A";
+    document.getElementById("qdCreatedOn").textContent =
+        item.createdOn  || item.created_at  || "N/A";
+    document.getElementById("qdRequiredBy").textContent =
+        item.requiredBy || item.required_by || "N/A";
 
-    // Vendor count
     const vendorsList = item.vendors || [];
     const vendorCount = vendorsList.length;
     const vendorLabel = `${vendorCount} Vendor${vendorCount !== 1 ? "s" : ""}`;
     document.getElementById("qdVendorCount").innerHTML =
         `<i class="ri-team-fill"></i><span>${vendorLabel}</span>`;
 
-    // Page status badge (top-right)
-    const badge = document.getElementById("qdStatusBadge");
-    const text  = document.getElementById("qdStatusText");
+    const badge         = document.getElementById("qdStatusBadge");
+    const text          = document.getElementById("qdStatusText");
     const currentStatus = item.status || "active";
 
     if (badge && text) {
-        badge.className = `qd-status-badge ${currentStatus.toLowerCase()}`;
+        badge.className  = `qd-status-badge ${currentStatus.toLowerCase()}`;
         text.textContent = capitalize(currentStatus);
 
-        // Icon for status
         const iconEl = badge.querySelector("i");
         if (iconEl) {
             const statusIcons = {
@@ -133,7 +148,8 @@ function populateQuotationInfo(quotation) {
                 completed: "ri-check-double-fill",
                 inactive:  "ri-close-circle-fill"
             };
-            iconEl.className = statusIcons[currentStatus.toLowerCase()] || "ri-checkbox-circle-fill";
+            iconEl.className =
+                statusIcons[currentStatus.toLowerCase()] || "ri-checkbox-circle-fill";
         }
     }
 }
@@ -143,44 +159,74 @@ function populateQuotationInfo(quotation) {
    ================================================================ */
 
 function populateVendorTable(quotation) {
-    const tbody      = document.getElementById("vendorResponsesBody");
-    const lowestText = document.getElementById("lowestVendorText");
-    
-    // Data extraction
-    const item       = quotation.data ? quotation.data : quotation;
+    const tbody        = document.getElementById("vendorResponsesBody");
+    const lowestBanner = document.getElementById("lowestVendorBanner"); // full green banner row
+    const lowestText   = document.getElementById("lowestVendorText");
+
+    const item        = quotation.data ? quotation.data : quotation;
     const vendorsList = item.vendors || [];
-    const lowest     = findLowestVendor(vendorsList);
 
-    let rows = "";
+    // ✅ FIX: findLowestVendor now correctly reads vendor.vendor_amount
+    const lowest = findLowestVendor(vendorsList);
 
+    /* ── Empty state ── */
     if (vendorsList.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No vendor responses yet.</td></tr>`;
-        if (lowestText) lowestText.textContent = "N/A";
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align:center; padding:24px; color:#6b7280;">
+                    No vendor responses yet.
+                </td>
+            </tr>`;
+        if (lowestBanner) lowestBanner.style.display = "none";
         return;
     }
 
+    /* ── Build table rows ── */
+    let rows = "";
+
     vendorsList.forEach((vendor) => {
-        const isLowest    = lowest && vendor.name === lowest.name && Number(vendor.amount) === Number(lowest.amount);
+
+        /*
+         * ✅ FIX: isLowest comparison now uses vendor.vendor_name & vendor.vendor_amount
+         *         Previously used vendor.name & vendor.amount (both undefined from backend)
+         *         which caused every row to be treated as lowest — or none at all.
+         */
+        const isLowest =
+            lowest !== null &&
+            vendor.vendor_name === lowest.vendor_name &&
+            Number(vendor.vendor_amount) === Number(lowest.vendor_amount);
+
         const rowClass    = isLowest ? ' class="lowest-row"' : "";
         const amountClass = isLowest ? "amount-cell amount-lowest" : "amount-cell";
-        
-        const vendorStatus = vendor.status || "submitted";
-        const statusCls   = getStatusClass(vendorStatus);
-        const statusIcon  = getStatusIcon(vendorStatus);
-        
-        // Agar initials backend se nahi aa rahe toh name ke pehle 2 letters nikal lein
-        const initials    = vendor.initials || (vendor.name ? vendor.name.substring(0, 2).toUpperCase() : "VN");
+
+        const vendorStatus   = vendor.status || "submitted";
+        const statusCls      = getStatusClass(vendorStatus);
+        const statusIcon     = getStatusIcon(vendorStatus);
+
+        // ✅ FIX: initials fallback now reads vendor.vendor_name (was vendor.name)
+        const initials = vendor.initials
+            || (vendor.vendor_name
+                    ? vendor.vendor_name.substring(0, 2).toUpperCase()
+                    : "VN");
+
         const submissionDate = vendor.submissionDate || vendor.submission_date || "N/A";
+
+        // Trophy icon only on the lowest-amount cell
+        const trophyIcon = isLowest
+            ? `<i class="ri-trophy-fill" style="color:#f59e0b; margin-right:5px; font-size:14px;"></i>`
+            : "";
 
         rows += `
             <tr${rowClass}>
                 <td>
                     <div class="vendor-name-cell">
                         <div class="vendor-chip ${vendor.chip || 'chip-blue'}">${initials}</div>
-                        ${vendor.vendor_name || 'Unknown Vendor'}
+                        ${vendor.vendor_name || "Unknown Vendor"}
                     </div>
                 </td>
-                <td class="${amountClass}">${formatAmount(vendor.vendor_amount)}</td>
+                <td class="${amountClass}">
+                    ${trophyIcon}PKR ${formatAmount(vendor.vendor_amount)}
+                </td>
                 <td>${submissionDate}</td>
                 <td>
                     <span class="badge-row-status ${statusCls}">
@@ -192,7 +238,7 @@ function populateVendorTable(quotation) {
                     <button
                         class="qd-action-btn btn-view"
                         title="View vendor details"
-                        onclick="viewVendorDetails('${vendor.name || ''}')"
+                        onclick="viewVendorDetails('${(vendor.vendor_name || "").replace(/'/g, "\\'")}')"
                     >
                         <i class="ri-eye-fill"></i>
                     </button>
@@ -203,9 +249,20 @@ function populateVendorTable(quotation) {
 
     tbody.innerHTML = rows;
 
-    // Update lowest banner text
-    if (lowest && lowestText) {
-        lowestText.textContent = `${lowest.name} (PKR ${formatAmount(lowest.amount)})`;
+    /* ── Lowest vendor banner ──
+     *
+     * ✅ FIX: lowest.vendor_name & lowest.vendor_amount used here
+     *         Previously lowest.name & lowest.amount were both undefined,
+     *         so the banner showed "undefined (PKR 0)" or was blank.
+     */
+    if (lowest) {
+        if (lowestText) {
+            lowestText.textContent =
+                `${lowest.vendor_name} (PKR ${formatAmount(lowest.vendor_amount)})`;
+        }
+        if (lowestBanner) lowestBanner.style.display = "flex";
+    } else {
+        if (lowestBanner) lowestBanner.style.display = "none";
     }
 }
 
@@ -215,28 +272,32 @@ function populateVendorTable(quotation) {
 
 function viewVendorDetails(vendorName) {
     console.log("View vendor:", vendorName);
+    // TODO: Add navigation or modal logic here
 }
 
 /* ================================================================
-   INIT — Entry point (Async setup for API)
+   INIT — Entry point
    ================================================================ */
 
 async function init() {
-    // Read quotation id from URL: quotation-details.html?id=1
+    // Read quotation id from URL: quotation-details.html?id=5
     const params      = new URLSearchParams(window.location.search);
-    const quotationId = parseInt(params.get("id"), 10) || 1; // Default ID 1
+    const quotationId = parseInt(params.get("id"), 10) || 1;
 
-    // Backend se data fetch karein
     const quotation = await fetchQuotationData(quotationId);
-    
-    
+
     if (quotation) {
         populateQuotationInfo(quotation);
         populateVendorTable(quotation);
     } else {
         console.error("Quotation data load nahi ho saka.");
-        document.getElementById("qdTitle").textContent = "Data Not Found";
-        document.getElementById("qdDescription").textContent = "Backend se data fetch karte waqt error aaya. Console check karein.";
+
+        const titleEl = document.getElementById("qdTitle");
+        const descEl  = document.getElementById("qdDescription");
+
+        if (titleEl) titleEl.textContent = "Data Not Found";
+        if (descEl)  descEl.textContent  =
+            "Backend se data fetch karte waqt error aaya. Console check karein.";
     }
 }
 
