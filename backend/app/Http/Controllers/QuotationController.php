@@ -100,7 +100,31 @@ class QuotationController extends Controller
         }
 
         // Frontend JS ke liye clean array/JSON 
+    $formattedVendors = $quotation->vendors->map(function ($vendor) {
     
+    $displayName = ($vendor->vendor_name && $vendor->vendor_name !== 'N/A') 
+        ? $vendor->vendor_name 
+        : $vendor->company_name;
+
+    return [
+        'vendor_id'        => $vendor->id,
+        'vendor_name'      => $displayName,
+        'company_name'     => $vendor->company_name,
+        'email'            => $vendor->email,
+        'phone'            => $vendor->phone,
+        'address'          => $vendor->address,
+        
+        
+        'vendor_amount'    => $vendor->amount, 
+        
+        
+        'quoted_amount'    => (float) $vendor->pivot->amount, 
+        'submission_date'  => $vendor->pivot->submission_date 
+            ? Carbon::parse($vendor->pivot->submission_date)->format('d M Y') 
+            : 'Not Submitted',
+        'vendor_status'    => $vendor->pivot->status
+    ];
+});
 
         // Final Response js
         return response()->json([
