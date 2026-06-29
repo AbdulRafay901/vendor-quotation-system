@@ -18,8 +18,7 @@ return new class extends Migration
         $table->unsignedBigInteger('quotation_id');
         $table->unsignedBigInteger('vendor_id');
 
-        // 2. Apne extra columns add karein
-        $table->decimal('amount', 15, 2)->nullable();
+        // 2. Apne extra columns add kareinphp
         $table->date('submission_date')->nullable();
         $table->string('status')->default('pending');
 

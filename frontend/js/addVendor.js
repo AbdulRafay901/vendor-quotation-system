@@ -1,6 +1,7 @@
 const form = document.getElementById("vendorForm");
 const vendorName = document.querySelector("#vendorName");
 const companyName = document.querySelector("#companyName");
+const Amount = document.querySelector("#Amount");
 const email = document.querySelector("#email");
 const phone = document.querySelector("#phone");
 const address = document.querySelector("#address");
@@ -15,6 +16,7 @@ async function saveVendor(e) {
         vendor_name: vendorName.value.trim(),
         company_name: companyName.value.trim(),
         email: email.value.trim(),
+        amount: Amount.value.trim(),
         phone: phone.value.trim(),
         address: address.value.trim(),
         status: status.value === "true" || status.value === "1" || status.checked, 
