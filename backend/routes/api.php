@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\VendorController;
 use App\Http\Controllers\QuotationController;
+use App\Http\Controllers\Api\ActivityController;
 
 Route::prefix('auth')->group(function () {
 
@@ -30,6 +31,10 @@ Route::prefix('auth')->group(function () {
         // Quotation Details 
 
        Route::get('/quotations/{id}/details', [QuotationController::class, 'getDetails']);
+
+
+    //    Activites Api 
+    Route::get('/activities', [ActivityController::class, 'index']);
 
         Route::post('/logout', [AuthController::class, 'logout']);
 
