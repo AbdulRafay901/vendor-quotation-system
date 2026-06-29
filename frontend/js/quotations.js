@@ -110,7 +110,7 @@ function renderTable(list) {
                     </span>
                 </td>
                 <td class="actions">
-                    <button class="icon-btn" title="View" onclick="viewQuotation(${q.id})">
+                    <button class="icon-btn" title="View" onclick="quotationDetails(${q.id})">
                         <i class="fa-regular fa-eye"></i>
                     </button>
                     <button class="icon-btn" title="Edit" onclick="editQuotation(${q.id})">
@@ -144,8 +144,8 @@ function applyFilters() {
 }
 
 // ─── ACTIONS ──────────────────────────────────────────────────────────────────
-function viewQuotation(id) {
-    window.location.href = `viewQuotation.html?id=${id}`;
+function quotationDetails(id) {
+    window.location.href = `quotationDetails.html?id=${id}`;
 }
 
 function editQuotation(id) {
