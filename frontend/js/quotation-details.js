@@ -1,179 +1,36 @@
 /* ================================================================
    quotation-details.js
-   VQMS — Quotation Details Page Logic
-
-   Flow:
-   1. Read `id` from URL query param  (?id=1)
-   2. Find matching quotation from sampleData (swap with API later)
-   3. Populate Quotation Information card
-   4. Render Vendor Responses table
-   5. Highlight lowest-bid row + update banner
+   VQMS — Quotation Details Page Logic (Backend Fetch Version)
    ================================================================ */
-
 
 /* ================================================================
-   SAMPLE DATA
-   Replace with: const quotation = await fetchQuotation(id);
-   when backend is ready.
+   API FETCH FUNCTION
    ================================================================ */
+async function fetchQuotationData(id) {
+    try {
+        const backendUrl = `http://127.0.0.1:8000/api/auth/quotations/${id}/details`;
 
-const sampleQuotations = [
-    {
-        id: 1,
-        title: "Purchase of Laptops",
-        description: "We need 20 Dell Core i7 laptops with 16GB RAM and 512GB SSD.",
-        createdOn: "24 Jun 2024",
-        requiredBy: "05 Jul 2024",
-        status: "active",
-        vendors: [
-            {
-                name: "ABC Traders",
-                initials: "AT",
-                chip: "chip-red",
-                amount: 950000,
-                submissionDate: "25 Jun 2024",
-                status: "submitted"
-            },
-            {
-                name: "Tech Solutions",
-                initials: "TS",
-                chip: "chip-blue",
-                amount: 980000,
-                submissionDate: "25 Jun 2024",
-                status: "submitted"
-            },
-            {
-                name: "Global Systems",
-                initials: "GS",
-                chip: "chip-green",
-                amount: 920000,
-                submissionDate: "26 Jun 2024",
-                status: "submitted"
+        const response = await fetch(backendUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem("token")}` 
             }
-        ]
-    },
-    {
-        id: 2,
-        title: "Office Furniture",
-        description: "Office chairs, desks, and storage cabinets for the new Karachi branch setup.",
-        createdOn: "22 Jun 2024",
-        requiredBy: "10 Jul 2024",
-        status: "pending",
-        vendors: [
-            {
-                name: "Smart Supplies",
-                initials: "SS",
-                chip: "chip-purple",
-                amount: 1250000,
-                submissionDate: "23 Jun 2024",
-                status: "submitted"
-            },
-            {
-                name: "ABC Traders",
-                initials: "AT",
-                chip: "chip-red",
-                amount: 1100000,
-                submissionDate: "24 Jun 2024",
-                status: "submitted"
-            },
-            {
-                name: "Future Tech",
-                initials: "FT",
-                chip: "chip-teal",
-                amount: 1300000,
-                submissionDate: "24 Jun 2024",
-                status: "pending"
-            }
-        ]
-    },
-    {
-        id: 3,
-        title: "Network Equipment",
-        description: "Routers, switches, and network cables for office LAN setup.",
-        createdOn: "20 Jun 2024",
-        requiredBy: "08 Jul 2024",
-        status: "active",
-        vendors: [
-            {
-                name: "Global Systems",
-                initials: "GS",
-                chip: "chip-green",
-                amount: 750000,
-                submissionDate: "21 Jun 2024",
-                status: "submitted"
-            },
-            {
-                name: "Tech Solutions",
-                initials: "TS",
-                chip: "chip-blue",
-                amount: 820000,
-                submissionDate: "21 Jun 2024",
-                status: "submitted"
-            }
-        ]
-    },
-    {
-        id: 4,
-        title: "Printer & Accessories",
-        description: "Heavy-duty printers, ink cartridges, and paper reams for admin department.",
-        createdOn: "18 Jun 2024",
-        requiredBy: "30 Jun 2024",
-        status: "completed",
-        vendors: [
-            {
-                name: "ABC Traders",
-                initials: "AT",
-                chip: "chip-red",
-                amount: 320000,
-                submissionDate: "19 Jun 2024",
-                status: "approved"
-            },
-            {
-                name: "Smart Supplies",
-                initials: "SS",
-                chip: "chip-purple",
-                amount: 350000,
-                submissionDate: "19 Jun 2024",
-                status: "submitted"
-            },
-            {
-                name: "Hamza Ali Co.",
-                initials: "HA",
-                chip: "chip-amber",
-                amount: 295000,
-                submissionDate: "20 Jun 2024",
-                status: "submitted"
-            }
-        ]
-    },
-    {
-        id: 5,
-        title: "Server Hardware",
-        description: "Rack-mount servers with 64GB RAM and 10TB storage for data center expansion.",
-        createdOn: "15 Jun 2024",
-        requiredBy: "25 Jun 2024",
-        status: "active",
-        vendors: [
-            {
-                name: "Tech Solutions",
-                initials: "TS",
-                chip: "chip-blue",
-                amount: 4500000,
-                submissionDate: "16 Jun 2024",
-                status: "submitted"
-            },
-            {
-                name: "Global Systems",
-                initials: "GS",
-                chip: "chip-green",
-                amount: 4200000,
-                submissionDate: "17 Jun 2024",
-                status: "submitted"
-            }
-        ]
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log(data)
+        return data;
+    } catch (error) {
+        console.error("Backend se data fetch karne mein masla:", error);
+        return null;
     }
-];
-
+}
 
 /* ================================================================
    UTILITY FUNCTIONS
@@ -184,6 +41,7 @@ const sampleQuotations = [
  * e.g. 920000 → "920,000"
  */
 function formatAmount(num) {
+    if (!num) return "0";
     return Number(num).toLocaleString("en-PK");
 }
 
@@ -199,8 +57,9 @@ function capitalize(str) {
  * Find the vendor with the lowest amount from a list.
  */
 function findLowestVendor(vendors) {
+    if (!vendors || vendors.length === 0) return null;
     return vendors.reduce(
-        (lowest, vendor) => vendor.amount < lowest.amount ? vendor : lowest,
+        (lowest, vendor) => Number(vendor.amount) < Number(lowest.amount) ? vendor : lowest,
         vendors[0]
     );
 }
@@ -209,47 +68,49 @@ function findLowestVendor(vendors) {
  * Return the status badge icon class based on status string.
  */
 function getStatusIcon(status) {
+    if (!status) return "ri-time-line";
     const icons = {
         submitted: "ri-check-line",
         pending:   "ri-time-line",
         approved:  "ri-checkbox-circle-line",
         rejected:  "ri-close-circle-line"
     };
-    return icons[status] || "ri-time-line";
+    return icons[status.toLowerCase()] || "ri-time-line";
 }
 
 /**
  * Return the status badge class name.
  */
 function getStatusClass(status) {
+    if (!status) return "pending";
     const classes = {
         submitted: "submitted",
         pending:   "pending",
         approved:  "approved",
         rejected:  "rejected"
     };
-    return classes[status] || "pending";
+    return classes[status.toLowerCase()] || "pending";
 }
-
 
 /* ================================================================
    POPULATE QUOTATION INFORMATION (Left Card)
    ================================================================ */
 
 function populateQuotationInfo(quotation) {
+    // Agar data 'data' key ke andar wrap hai toh use nikalien, nahi toh direct wrapper use karein
+    const item = quotation.data ? quotation.data : quotation;
 
-    // Title
-    document.getElementById("qdTitle").textContent = quotation.title;
+    // Title aur Description
+    document.getElementById("qdTitle").textContent = item.title || "No Title Available";
+    document.getElementById("qdDescription").textContent = item.description || "No Description Provided";
 
-    // Description
-    document.getElementById("qdDescription").textContent = quotation.description;
-
-    // Dates
-    document.getElementById("qdCreatedOn").textContent  = quotation.createdOn;
-    document.getElementById("qdRequiredBy").textContent = quotation.requiredBy;
+    // Dates (Smart fallback agar backend se snake_case aa raha ho)
+    document.getElementById("qdCreatedOn").textContent  = item.createdOn || item.created_at || "N/A";
+    document.getElementById("qdRequiredBy").textContent = item.requiredBy || item.required_by || "N/A";
 
     // Vendor count
-    const vendorCount = quotation.vendors.length;
+    const vendorsList = item.vendors || [];
+    const vendorCount = vendorsList.length;
     const vendorLabel = `${vendorCount} Vendor${vendorCount !== 1 ? "s" : ""}`;
     document.getElementById("qdVendorCount").innerHTML =
         `<i class="ri-team-fill"></i><span>${vendorLabel}</span>`;
@@ -257,63 +118,81 @@ function populateQuotationInfo(quotation) {
     // Page status badge (top-right)
     const badge = document.getElementById("qdStatusBadge");
     const text  = document.getElementById("qdStatusText");
+    const currentStatus = item.status || "active";
 
-    badge.className = `qd-status-badge ${quotation.status}`;
-    text.textContent = capitalize(quotation.status);
+    if (badge && text) {
+        badge.className = `qd-status-badge ${currentStatus.toLowerCase()}`;
+        text.textContent = capitalize(currentStatus);
 
-    // Icon for status
-    const iconEl = badge.querySelector("i");
-    const statusIcons = {
-        active:    "ri-checkbox-circle-fill",
-        pending:   "ri-time-fill",
-        completed: "ri-check-double-fill",
-        inactive:  "ri-close-circle-fill"
-    };
-    iconEl.className = statusIcons[quotation.status] || "ri-checkbox-circle-fill";
+        // Icon for status
+        const iconEl = badge.querySelector("i");
+        if (iconEl) {
+            const statusIcons = {
+                active:    "ri-checkbox-circle-fill",
+                pending:   "ri-time-fill",
+                completed: "ri-check-double-fill",
+                inactive:  "ri-close-circle-fill"
+            };
+            iconEl.className = statusIcons[currentStatus.toLowerCase()] || "ri-checkbox-circle-fill";
+        }
+    }
 }
-
 
 /* ================================================================
    POPULATE VENDOR RESPONSES TABLE (Right Card)
    ================================================================ */
 
 function populateVendorTable(quotation) {
-
     const tbody      = document.getElementById("vendorResponsesBody");
     const lowestText = document.getElementById("lowestVendorText");
-    const lowest     = findLowestVendor(quotation.vendors);
+    
+    // Data extraction
+    const item       = quotation.data ? quotation.data : quotation;
+    const vendorsList = item.vendors || [];
+    const lowest     = findLowestVendor(vendorsList);
 
     let rows = "";
 
-    quotation.vendors.forEach((vendor) => {
+    if (vendorsList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No vendor responses yet.</td></tr>`;
+        if (lowestText) lowestText.textContent = "N/A";
+        return;
+    }
 
-        const isLowest    = vendor.name === lowest.name && vendor.amount === lowest.amount;
+    vendorsList.forEach((vendor) => {
+        const isLowest    = lowest && vendor.name === lowest.name && Number(vendor.amount) === Number(lowest.amount);
         const rowClass    = isLowest ? ' class="lowest-row"' : "";
         const amountClass = isLowest ? "amount-cell amount-lowest" : "amount-cell";
-        const statusCls   = getStatusClass(vendor.status);
-        const statusIcon  = getStatusIcon(vendor.status);
+        
+        const vendorStatus = vendor.status || "submitted";
+        const statusCls   = getStatusClass(vendorStatus);
+        const statusIcon  = getStatusIcon(vendorStatus);
+        
+        // Agar initials backend se nahi aa rahe toh name ke pehle 2 letters nikal lein
+        const initials    = vendor.initials || (vendor.name ? vendor.name.substring(0, 2).toUpperCase() : "VN");
+        const submissionDate = vendor.submissionDate || vendor.submission_date || "N/A";
 
         rows += `
             <tr${rowClass}>
                 <td>
                     <div class="vendor-name-cell">
-                        <div class="vendor-chip ${vendor.chip}">${vendor.initials}</div>
-                        ${vendor.name}
+                        <div class="vendor-chip ${vendor.chip || 'chip-blue'}">${initials}</div>
+                        ${vendor.vendor_name || 'Unknown Vendor'}
                     </div>
                 </td>
                 <td class="${amountClass}">${formatAmount(vendor.amount)}</td>
-                <td>${vendor.submissionDate}</td>
+                <td>${submissionDate}</td>
                 <td>
                     <span class="badge-row-status ${statusCls}">
                         <i class="${statusIcon}"></i>
-                        ${capitalize(vendor.status)}
+                        ${capitalize(vendorStatus)}
                     </span>
                 </td>
                 <td>
                     <button
                         class="qd-action-btn btn-view"
                         title="View vendor details"
-                        onclick="viewVendorDetails('${vendor.name}')"
+                        onclick="viewVendorDetails('${vendor.name || ''}')"
                     >
                         <i class="ri-eye-fill"></i>
                     </button>
@@ -325,38 +204,40 @@ function populateVendorTable(quotation) {
     tbody.innerHTML = rows;
 
     // Update lowest banner text
-    lowestText.textContent = `${lowest.name} (PKR ${formatAmount(lowest.amount)})`;
+    if (lowest && lowestText) {
+        lowestText.textContent = `${lowest.name} (PKR ${formatAmount(lowest.amount)})`;
+    }
 }
-
 
 /* ================================================================
    ACTION: View Vendor Details
-   Navigate to vendor-details page or open a modal.
    ================================================================ */
 
 function viewVendorDetails(vendorName) {
-    // TODO: link to vendor-details.html?name=<vendorName>
-    // or open a modal — implement when vendor-details page is ready.
     console.log("View vendor:", vendorName);
 }
 
-
 /* ================================================================
-   INIT — Entry point
+   INIT — Entry point (Async setup for API)
    ================================================================ */
 
-function init() {
-
+async function init() {
     // Read quotation id from URL: quotation-details.html?id=1
     const params      = new URLSearchParams(window.location.search);
-    const quotationId = parseInt(params.get("id"), 10);
+    const quotationId = parseInt(params.get("id"), 10) || 1; // Default ID 1
 
-    // Find quotation — fall back to first item if no id given
-    const quotation = sampleQuotations.find(q => q.id === quotationId)
-                   || sampleQuotations[0];
-
-    populateQuotationInfo(quotation);
-    populateVendorTable(quotation);
+    // Backend se data fetch karein
+    const quotation = await fetchQuotationData(quotationId);
+    
+    
+    if (quotation) {
+        populateQuotationInfo(quotation);
+        populateVendorTable(quotation);
+    } else {
+        console.error("Quotation data load nahi ho saka.");
+        document.getElementById("qdTitle").textContent = "Data Not Found";
+        document.getElementById("qdDescription").textContent = "Backend se data fetch karte waqt error aaya. Console check karein.";
+    }
 }
 
 document.addEventListener("DOMContentLoaded", init);

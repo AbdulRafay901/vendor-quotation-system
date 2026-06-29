@@ -10,7 +10,7 @@ Route::prefix('auth')->group(function () {
 
     Route::post('/login',[AuthController::class, 'login']);
 
-    Route::get('/quotations/{id}/details', [QuotationController::class, 'getDetails']);
+    
     
 
     Route::middleware('auth:sanctum')
@@ -29,7 +29,7 @@ Route::prefix('auth')->group(function () {
 
         // Quotation Details 
 
-       
+       Route::get('/quotations/{id}/details', [QuotationController::class, 'getDetails']);
 
         Route::post('/logout', [AuthController::class, 'logout']);
 
