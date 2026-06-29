@@ -99,32 +99,10 @@ class QuotationController extends Controller
             ], 404);
         }
 
-        // Frontend JS ke liye clean array/JSON banana
-        $formattedVendors = $quotation->vendors->map(function ($vendor) {
-            
-            // Jaise aapne dikhaye ke vendor_name 'N/A' ho sakta hai, toh fallback company_name par rakhenge
-            $displayName = ($vendor->vendor_name && $vendor->vendor_name !== 'N/A') 
-                ? $vendor->vendor_name 
-                : $vendor->company_name;
+        // Frontend JS ke liye clean array/JSON 
+    
 
-            return [
-                'vendor_id'    => $vendor->id,
-                'vendor_name'  => $displayName,
-                'company_name' => $vendor->company_name,
-                'email'        => $vendor->email,
-                'phone'        => $vendor->phone,
-                'address'      => $vendor->address,
-                
-                // Yeh wo data hai jo pivot table (quotation_vendor) se aa raha hai
-                'amount'          => (float) $vendor->pivot->amount,
-                'submission_date' => $vendor->pivot->submission_date 
-                    ? Carbon::parse($vendor->pivot->submission_date)->format('d M Y') 
-                    : 'Not Submitted',
-                'vendor_status'   => $vendor->pivot->status // pending, submitted etc.
-            ];
-        });
-
-        // Final Response jo aapki JS fetch call ko milega
+        // Final Response js
         return response()->json([
             'success' => true,
             'data'    => [

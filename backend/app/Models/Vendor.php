@@ -20,6 +20,7 @@ class Vendor extends Model
         'phone',
         'address',
         'status',
+        'amount',
     ];
 
     public function quotations(): BelongsToMany

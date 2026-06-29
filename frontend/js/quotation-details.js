@@ -180,7 +180,7 @@ function populateVendorTable(quotation) {
                         ${vendor.vendor_name || 'Unknown Vendor'}
                     </div>
                 </td>
-                <td class="${amountClass}">${formatAmount(vendor.amount)}</td>
+                <td class="${amountClass}">${formatAmount(vendor.vendor_amount)}</td>
                 <td>${submissionDate}</td>
                 <td>
                     <span class="badge-row-status ${statusCls}">

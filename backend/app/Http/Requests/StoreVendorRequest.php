@@ -29,6 +29,7 @@ class StoreVendorRequest extends FormRequest
             'phone' => 'required|string|max:20',
             'address' => 'required|string',
             'status' => 'required|boolean',
+            'amount' => 'required|numeric',
         ];
     }
 }
