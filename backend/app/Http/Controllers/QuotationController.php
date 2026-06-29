@@ -6,6 +6,7 @@ use App\Http\Requests\StoreQuotationRequest;
 use App\Models\Quotation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class QuotationController extends Controller
 {
@@ -83,5 +84,58 @@ class QuotationController extends Controller
             'success' => true,
             'message' => 'Quotation deleted.'
         ]);
+    }
+
+    public function getDetails($id)
+    {
+        // Eager loading use kar rahe hain taake query slow na ho
+        $quotation = Quotation::with('vendors')->find($id);
+
+        // Agar quotation nahi milti toh 404 error
+        if (!$quotation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quotation nahi mili!'
+            ], 404);
+        }
+
+        // Frontend JS ke liye clean array/JSON banana
+        $formattedVendors = $quotation->vendors->map(function ($vendor) {
+            
+            // Jaise aapne dikhaye ke vendor_name 'N/A' ho sakta hai, toh fallback company_name par rakhenge
+            $displayName = ($vendor->vendor_name && $vendor->vendor_name !== 'N/A') 
+                ? $vendor->vendor_name 
+                : $vendor->company_name;
+
+            return [
+                'vendor_id'    => $vendor->id,
+                'vendor_name'  => $displayName,
+                'company_name' => $vendor->company_name,
+                'email'        => $vendor->email,
+                'phone'        => $vendor->phone,
+                'address'      => $vendor->address,
+                
+                // Yeh wo data hai jo pivot table (quotation_vendor) se aa raha hai
+                'amount'          => (float) $vendor->pivot->amount,
+                'submission_date' => $vendor->pivot->submission_date 
+                    ? Carbon::parse($vendor->pivot->submission_date)->format('d M Y') 
+                    : 'Not Submitted',
+                'vendor_status'   => $vendor->pivot->status // pending, submitted etc.
+            ];
+        });
+
+        // Final Response jo aapki JS fetch call ko milega
+        return response()->json([
+            'success' => true,
+            'data'    => [
+                'id'            => $quotation->id,
+                'title'         => $quotation->title,
+                'description'   => $quotation->description,
+                'required_date' => Carbon::parse($quotation->required_date)->format('d M Y'),
+                'status'        => $quotation->status,
+                'created_at'    => $quotation->created_at->format('d M Y'),
+                'vendors'       => $formattedVendors // Saare vendors is array mein honge
+            ]
+        ], 200);
     }
 }
